@@ -1,0 +1,146 @@
+= render 'profiles/header'
+
+.main-new
+= form_with model: @item, method: :PATCH, local: true do |f|
+  .sale-box
+    .sale-box__image
+      .image-box
+        .image-box__title
+          %label
+            出品画像
+          %span.image-box__title--required
+            必須
+        %p.image-box__explain
+          最大4枚までアップロードできます
+        #image-box-1
+          .image-box__container.item-num-0#image-box__container
+            = f.fields_for :item_images do |i|
+              .image-box__input-area--icon
+                %label{for: "img-file"}
+                  = icon('fas', 'camera fa-2x')
+              .image-box__input-area
+                = i.file_field :image
+                %input{type: 'file', name: "item[item_images_attributes][1][image]", id:"img-file1"}
+                %input{type: 'file', name: "item[item_images_attributes][2][image]", id:"img-file2"}
+                %input{type: 'file', name: "item[item_images_attributes][3][image]", id:"img-file3"}
+
+    .sale-box__product
+      .product-box
+        .product-box__title
+          %label
+            商品名
+          %span.image-box__title--required
+            必須
+        = f.text_field :name, class: 'product-box__title-input', placeholder: "40文字まで", maxlength: "40"
+
+        .product-box__explain
+          %label
+            商品の説明
+          %span.product-box__explain--required
+            必須
+        = f.text_area :introduction, class: 'product-box__explain-input', placeholder: "商品の説明（必須 1,000文字以内）&#13;&#10;（色、素材、重さ、定価、注意点など）&#13;&#10;&#13;&#10;例）2010年頃に1万円で購入したジャケットです。ライトグレーで傷はありません。あわせやすいのでおすすめです。".html_safe, maxlength: "1000"
+        .product-box__explain-input--count
+          %span 0/1000
+
+    .sale-box__detail
+      .sale-box__guidance
+        商品の詳細
+      .detail-box
+        .detail-box__category
+          %label
+            カテゴリー
+          %span.detail-box__category--required
+            必須
+        .detail-box__category-select
+          = f.collection_select :category_id, Category.all, :id, :name, prompt: "選択して下さい", class: 'detail-box__category-input'
+        .detail-box__brand
+          %label
+            ブランド
+          %span.detail-box__brand--arbitrary
+            任意
+        = f.fields_for :brand do |b|
+          =b.text_field :name, class: 'detail-box__brand-input', placeholder: "例）シャネル"
+        .detail-box__condition
+          %label
+            商品の状態
+          %span.detail-box__condition--required
+            必須
+        .detail-box__condition-select
+          = f.select :item_condition,["新品、未使用","未使用に近い","目立った傷や汚れなし","やや傷や汚れあり","傷や汚れあり","全体的に状態が悪い"], prompt: "選択して下さい", class: 'detail-box__condition-input'
+
+    .sale-box__delivery
+      .sale-box__guidance
+        配送について
+      .delivery-box
+        .delivery-box__burden
+          %label
+            配送料の負担
+          %span.delivery-box__burden--required
+            必須
+        .delivery-box__burden-select
+          = f.select :delivery_burden,["送料込み(出品者負担)","着払い(購入者負担)"], prompt: "選択して下さい", class: 'detail-box__burden-input'
+        .delivery-box__method
+          %label
+            配送方法
+          %span.delivery-box__method--required
+            必須
+        .delivery-box__method-select
+          = f.select :delivery_method,["未定","クロネコヤマト","ゆうパック","ゆうメール"], prompt: "選択して下さい", class: 'detail-box__method-input'
+        .delivery-box__shippers
+          %label
+            発送元の地域
+          %span.delivery-box__shippers--required
+            必須
+        .delivery-box__shippers-select
+          = f.collection_select :shipper, Prefecture.all, :name, :name, prompt: "選択して下さい", class: 'delivery-box__shippers-input'
+        .delivery-box__shipping-day
+          %label
+            発送までの日数
+          %span.delivery-box__shipping-day--required
+            必須
+        .delivery-box__shipping-day-select
+          = f.select :shipping_day,["1〜2日で発送","2〜3日で発送","4〜7日で発送"], prompt: "選択して下さい", class: 'delivery-box__shipping-day-input'
+
+    .sale-box__price
+      .sale-box__guidance
+        価格（¥300〜9,999,999）
+      .price-box
+        .price-box__price
+          %label
+            販売価格
+          %span.price-box__price--required
+            必須
+          .price-box__form
+            %span.price-box__form--yen
+              ¥
+            = f.text_field :price, class: 'price-box__form--input', placeholder: "0"
+        .price-box__commission
+          %label
+            販売手数料
+          %span
+            （3%）
+          %span.price-box__commission--result
+            —
+        .price-box__profit
+          %label
+            販売利益
+          %span.price-box__profit--result
+            —
+
+    .sale-box__sale
+      .sale-box
+        = f.submit "編集する", class:"sale-box__sell"
+        = link_to '#' do
+          .sale-box__save
+            %p
+              下書きに保存
+        = link_to '#' do
+          .sale-box__back
+            %p
+              もどる
+              
+    .sale-box__caution
+      %p
+        禁止されている行為および出品物を必ずご確認ください。偽ブランド品や盗品物などの販売は犯罪であり、法律により処罰される可能性があります。 また、出品をもちまして加盟店規約に同意したことになります。
+
+= render 'profiles/footer'
