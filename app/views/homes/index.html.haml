@@ -92,7 +92,7 @@
     .pickup-categories__container
       - @items.zip(@item_images) do |item, item_image|
         = link_to item_path(item.id), class: 'category-item-box' do
-          = image_tag item_image.image.url, class: 'category-item-box__image'
+          = image_tag item_image.first.image.url, class: 'category-item-box__image'
           .category-item-box__name
             = item.name
           .category-item-box__bottom-box
